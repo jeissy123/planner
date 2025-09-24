@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Planner 2025</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&display=swap');
+
+        :root {
+            --primary-color: #FF69B4;
+            --primary-dark: #C71585;
+            --secondary-color: #F8BBD0;
+            --bg-color: #fce4ec;
+            --text-color: #333;
+            --white: #fff;
+            --gradient-1: linear-gradient(135deg, #FF69B4 0%, #C71585 100%);
+            --gradient-2: linear-gradient(45deg, #FCE4EC 0%, #F8BBD0 100%);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+            transition: background-color 0.5s ease;
+        }
+
+        .page-container {
+            width: 100%;
+            max-width: 900px;
+            display: none;
+            background-color: var(--white);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            animation: fadeIn 0.8s ease-in-out;
+        }
+        
+        .page-container.active {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Home Page Styles */
+        #home-page {
+            text-align: center;
+            justify-content: center;
+            align-items: center;
+            min-height: 50vh;
+        }
+
+        #home-page h1 {
+            color: var(--primary-dark);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
+            animation: bounceIn 1s ease-out;
+        }
+
+        #home-page p {
+            font-style: italic;
+            color: #666;
+            font-size: clamp(1rem, 3vw, 1.2rem);
+            margin-bottom: 40px;
+            animation: fadeIn 1.5s ease-in-out;
+        }
+
+        #home-page img {
+            max-width: 200px;
+            margin-bottom: 30px;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            animation: spinAndFadeIn 2s ease-out;
+        }
+
+        .home-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+            animation: fadeIn 2s ease-in-out;
+        }
+
+        @keyframes bounceIn {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        @keyframes spinAndFadeIn {
+            0% { transform: scale(0.8) rotate(-90deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Button General Styles */
+        .btn {
+            background-image: var(--gradient-1);
+            color: var(--white);
+            border: none;
+            border-radius: 50px;
+            padding: 15px 30px;
+            font-size: clamp(1rem, 4vw, 1.2rem);
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Calendar Page Styles */
+        .header {
+            text-align: center;
+        }
+
+        .header h1 {
+            color: var(--primary-color);
+            margin: 0 0 5px;
+            font-size: 2.5rem;
+        }
+
+        .header p {
+            font-style: italic;
+            color: #666;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .calendar-section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .calendar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .calendar-header h2 {
+            margin: 0;
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+        }
+
+        .nav-button {
+            background-color: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-button:hover {
+            background-color: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .day-name {
+            font-weight: 800;
+            color: var(--primary-dark);
+            padding: 8px 0;
+            text-transform: uppercase;
+        }
+
+        .day {
+            background-color: var(--secondary-color);
+            padding: 12px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            position: relative;
+            aspect-ratio: 1/1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+        }
+
+        .day:hover {
+            background-color: #F48FB1;
+            transform: scale(1.05);
+        }
+        
+        .day.has-task {
+            background-image: var(--gradient-1);
+            color: var(--white);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .day.has-task::after {
+            content: '';
+            position: absolute;
+            bottom: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 6px;
+            height: 6px;
+            background-color: var(--white);
+            border-radius: 50%;
+        }
+
+        .day.selected {
+            border: 4px solid var(--primary-dark);
+            box-shadow: 0 0 15px rgba(255, 105, 180, 0.7);
+            animation: pulse 1s infinite alternate;
+        }
+
+        @keyframes pulse {
+            from { transform: scale(1); }
+            to { transform: scale(1.05); }
+        }
+        
+        .calendar-grid > .day:empty {
+            background-color: transparent;
+            cursor: default;
+            transform: none;
+        }
+
+        .agenda-section {
+            display: none;
+            flex-direction: column;
+            gap: 20px;
+            padding: 20px;
+            background-image: var(--gradient-2);
+            border-radius: 15px;
+            box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .agenda-header {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+
+        .add-task-form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .add-task-form input,
+        .add-task-form textarea {
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            font-size: 1rem;
+            width: 100%;
+            box-sizing: border-box;
+            transition: box-shadow 0.3s;
+        }
+
+        .add-task-form input:focus,
+        .add-task-form textarea:focus {
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(255, 105, 180, 0.3);
+        }
+
+        .add-task-form textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .add-task-form button {
+            background-image: var(--gradient-1);
+            color: var(--white);
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .add-task-form button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .task-item {
+            background-color: var(--white);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+            position: relative;
+            transition: transform 0.2s;
+        }
+
+        .task-item:hover {
+            transform: translateX(5px);
+        }
+
+        .task-item h4 {
+            margin: 0;
+            color: var(--primary-color);
+            font-size: 1.2rem;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 5px;
+        }
+
+        .task-item p {
+            margin: 0;
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .task-item .task-time {
+            font-weight: bold;
+            color: var(--primary-dark);
+        }
+        
+        .remove-task {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: color 0.2s, transform 0.2s;
+        }
+
+        .remove-task:hover {
+            color: var(--primary-dark);
+            transform: scale(1.2);
+        }
+        
+        .no-tasks-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 30px;
+            text-align: center;
+            background-color: #f0e6f2; 
+            border: 2px dashed var(--primary-dark);
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+        
+        .no-tasks-message .icon {
+            font-size: 4rem;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @media (min-width: 768px) {
+            .page-container.active {
+                flex-direction: row;
+                justify-content: space-between;
+                align-items: flex-start;
+            }
+
+            .calendar-section {
+                width: 45%;
+            }
+
+            .agenda-section {
+                display: flex;
+                width: 50%;
+            }
+        }
+
+        .all-tasks-list {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        .task-group {
+            border: 1px solid var(--secondary-color);
+            border-radius: 10px;
+            padding: 15px;
+            background-color: var(--bg-color);
+        }
+
+        .task-group h3 {
+            margin-top: 0;
+            color: var(--primary-dark);
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Home Page -->
+    <div id="home-page" class="page-container active">
+        <h1>Planner 2025</h1>
+        <p>Organize sua vida, um dia de cada vez.</p>
+        <img src="https://placehold.co/200x200/F48FB1/ffffff?text=🗒️" alt="Ilustração de um caderninho" />
+        <div class="home-buttons">
+            <button class="btn" id="startPlannerBtn">Começar a Planejar</button>
+            <button class="btn" id="viewAllTasksBtnHome">Ver Todas as Tarefas</button>
+        </div>
+    </div>
+    
+    <!-- Calendar Page -->
+    <div id="calendar-page" class="page-container">
+        <div class="header">
+            <h1>Planner 2025</h1>
+            <p>Organize seu dia, um passo de cada vez.</p>
+        </div>
+
+        <div class="calendar-section">
+            <div class="calendar-header">
+                <button class="nav-button" id="prevMonthBtn">←</button>
+                <h2 id="currentMonthYear"></h2>
+                <button class="nav-button" id="nextMonthBtn">→</button>
+            </div>
+            <div class="calendar-grid">
+                <!-- Os nomes dos dias e os números do calendário serão gerados aqui pelo JavaScript -->
+            </div>
+        </div>
+
+        <div class="agenda-section" id="agendaSection">
+            <h3 class="agenda-header" id="agendaHeader">Selecione um dia para ver ou adicionar tarefas</h3>
+            <div class="add-task-form">
+                <input type="text" id="taskInput" placeholder="Título da tarefa..." required>
+                <input type="time" id="timeInput" required>
+                <textarea id="notesInput" placeholder="Anotações..."></textarea>
+                <button id="addTaskBtn">Adicionar Tarefa</button>
+            </div>
+            <div class="tasks-list" id="tasksList"></div>
+        </div>
+        <button class="btn" id="viewAllTasksBtnCalendar" style="margin-top: 20px;">Ver Todas as Tarefas</button>
+    </div>
+
+    <!-- All Tasks Page -->
+    <div id="all-tasks-page" class="page-container">
+        <div class="header" style="text-align: center;">
+            <h1>Lista de Todas as Tarefas</h1>
+            <p>Uma visão geral da sua agenda.</p>
+        </div>
+        <div class="all-tasks-list" id="allTasksList">
+            <!-- As tarefas serão listadas aqui -->
+        </div>
+        <button class="btn" id="backToCalendarBtnAllTasks" style="margin-top: 20px;">Voltar ao Calendário</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const homePage = document.getElementById('home-page');
+            const calendarPage = document.getElementById('calendar-page');
+            const allTasksPage = document.getElementById('all-tasks-page');
+
+            const startPlannerBtn = document.getElementById('startPlannerBtn');
+            const viewAllTasksBtnHome = document.getElementById('viewAllTasksBtnHome');
+            const viewAllTasksBtnCalendar = document.getElementById('viewAllTasksBtnCalendar');
+            const backToCalendarBtnAllTasks = document.getElementById('backToCalendarBtnAllTasks');
+
+            const currentMonthYearEl = document.getElementById('currentMonthYear');
+            const calendarGridEl = document.querySelector('.calendar-grid');
+            const prevMonthBtn = document.getElementById('prevMonthBtn');
+            const nextMonthBtn = document.getElementById('nextMonthBtn');
+            const agendaSection = document.getElementById('agendaSection');
+            const agendaHeader = document.getElementById('agendaHeader');
+            const taskInput = document.getElementById('taskInput');
+            const timeInput = document.getElementById('timeInput');
+            const notesInput = document.getElementById('notesInput');
+            const addTaskBtn = document.getElementById('addTaskBtn');
+            const tasksList = document.getElementById('tasksList');
+            const allTasksListEl = document.getElementById('allTasksList');
+            const localStorageKey = 'planner2025_data';
+
+            let currentMonth = new Date().getMonth();
+            let currentYear = 2025;
+            let selectedDate = null;
+            let agendaData = JSON.parse(localStorage.getItem(localStorageKey)) || {};
+
+            function showPage(page) {
+                document.querySelectorAll('.page-container').forEach(p => p.classList.remove('active'));
+                page.classList.add('active');
+            }
+
+            function renderCalendar() {
+                calendarGridEl.innerHTML = '';
+                const dayNames = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+                dayNames.forEach(name => {
+                    const dayNameElement = document.createElement('div');
+                    dayNameElement.classList.add('day-name');
+                    dayNameElement.textContent = name;
+                    calendarGridEl.appendChild(dayNameElement);
+                });
+
+                const firstDayOfMonth = new Date(currentYear, currentMonth, 1).getDay();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                const monthName = new Date(currentYear, currentMonth).toLocaleString('pt-BR', { month: 'long' });
+                currentMonthYearEl.textContent = `${monthName.charAt(0).toUpperCase() + monthName.slice(1)} ${currentYear}`;
+
+                for (let i = 0; i < firstDayOfMonth; i++) {
+                    const emptyDay = document.createElement('div');
+                    emptyDay.classList.add('day');
+                    calendarGridEl.appendChild(emptyDay);
+                }
+
+                for (let day = 1; day <= daysInMonth; day++) {
+                    const dayElement = document.createElement('div');
+                    dayElement.classList.add('day');
+                    dayElement.textContent = day;
+                    const dateString = `${currentYear}-${String(currentMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                    if (agendaData[dateString] && agendaData[dateString].length > 0) {
+                        dayElement.classList.add('has-task');
+                    }
+                    
+                    dayElement.addEventListener('click', () => {
+                        document.querySelectorAll('.day').forEach(d => d.classList.remove('selected'));
+                        dayElement.classList.add('selected');
+
+                        selectedDate = dateString;
+                        agendaHeader.textContent = `Tarefas para ${day} de ${monthName}`;
+                        agendaSection.style.display = 'flex';
+                        renderTasks();
+                    });
+
+                    calendarGridEl.appendChild(dayElement);
+                }
+            }
+
+            function renderTasks() {
+                tasksList.innerHTML = '';
+                if (!selectedDate || !agendaData[selectedDate] || agendaData[selectedDate].length === 0) {
+                     tasksList.innerHTML = `
+                        <div class="no-tasks-message">
+                            <span class="icon">📝</span>
+                            <p>Nenhuma tarefa agendada para este dia.</p>
+                            <p>Adicione uma nova tarefa acima!</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const sortedTasks = agendaData[selectedDate].sort((a, b) => a.time.localeCompare(b.time));
+
+                sortedTasks.forEach((task, index) => {
+                    const taskItem = document.createElement('div');
+                    taskItem.classList.add('task-item');
+                    taskItem.innerHTML = `
+                        <h4>${task.task}</h4>
+                        <p class="task-time">Horário: ${task.time}</p>
+                        ${task.notes ? `<p>Notas: ${task.notes}</p>` : ''}
+                        <button class="remove-task" data-index="${index}">&times;</button>
+                    `;
+                    tasksList.appendChild(taskItem);
+                });
+            }
+
+            function renderAllTasks() {
+                allTasksListEl.innerHTML = '';
+                const sortedDates = Object.keys(agendaData).sort();
+
+                if (sortedDates.length === 0) {
+                    allTasksListEl.innerHTML = `
+                        <div class="no-tasks-message">
+                            <span class="icon">✨</span>
+                            <p>Você não tem nenhuma tarefa agendada ainda!</p>
+                            <p>Volte para o calendário e comece a planejar.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                sortedDates.forEach(dateString => {
+                    const tasksForDay = agendaData[dateString];
+                    if (tasksForDay.length > 0) {
+                        const dateObj = new Date(dateString + 'T00:00:00'); 
+                        const formattedDate = dateObj.toLocaleDateString('pt-BR', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+                        
+                        const taskGroup = document.createElement('div');
+                        taskGroup.classList.add('task-group');
+                        taskGroup.innerHTML = `<h3>${formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1)}</h3>`;
+
+                        const sortedTasks = tasksForDay.sort((a, b) => a.time.localeCompare(b.time));
+                        sortedTasks.forEach(task => {
+                            const taskItem = document.createElement('div');
+                            taskItem.classList.add('task-item');
+                            taskItem.innerHTML = `
+                                <h4>${task.task}</h4>
+                                <p class="task-time">Horário: ${task.time}</p>
+                                ${task.notes ? `<p>Notas: ${task.notes}</p>` : ''}
+                            `;
+                            taskGroup.appendChild(taskItem);
+                        });
+                        allTasksListEl.appendChild(taskGroup);
+                    }
+                });
+            }
+
+
+            function saveAgenda() {
+                localStorage.setItem(localStorageKey, JSON.stringify(agendaData));
+            }
+
+            // Event listeners for page navigation
+            startPlannerBtn.addEventListener('click', () => {
+                showPage(calendarPage);
+                renderCalendar();
+            });
+
+            viewAllTasksBtnHome.addEventListener('click', () => {
+                showPage(allTasksPage);
+                renderAllTasks();
+            });
+
+            viewAllTasksBtnCalendar.addEventListener('click', () => {
+                showPage(allTasksPage);
+                renderAllTasks();
+            });
+
+            backToCalendarBtnAllTasks.addEventListener('click', () => {
+                showPage(calendarPage);
+            });
+
+            // Existing planner event listeners
+            addTaskBtn.addEventListener('click', () => {
+                const taskText = taskInput.value.trim();
+                const timeText = timeInput.value.trim();
+                const notesText = notesInput.value.trim();
+
+                if (!selectedDate) {
+                    const messageBox = document.createElement('div');
+                    messageBox.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-align: center;';
+                    messageBox.innerHTML = '<p>Selecione um dia no calendário primeiro.</p><button onclick="this.parentElement.remove()" style="margin-top: 10px; background-image: var(--gradient-1); color: var(--white); border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">OK</button>';
+                    document.body.appendChild(messageBox);
+                    return;
+                }
+
+                if (!taskText || !timeText) {
+                    const messageBox = document.createElement('div');
+                    messageBox.style.cssText = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 20px; background-color: white; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); z-index: 1000; text-align: center;';
+                    messageBox.innerHTML = '<p>Por favor, preencha a tarefa e o horário.</p><button onclick="this.parentElement.remove()" style="margin-top: 10px; background-image: var(--gradient-1); color: var(--white); border: none; padding: 8px 16px; border-radius: 5px; cursor: pointer;">OK</button>';
+                    document.body.appendChild(messageBox);
+                    return;
+                }
+
+                const newTask = {
+                    task: taskText,
+                    time: timeText,
+                    notes: notesText
+                };
+
+                if (!agendaData[selectedDate]) {
+                    agendaData[selectedDate] = [];
+                }
+                agendaData[selectedDate].push(newTask);
+                saveAgenda();
+                renderTasks();
+                renderCalendar();
+                
+                taskInput.value = '';
+                timeInput.value = '';
+                notesInput.value = '';
+            });
+
+            tasksList.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-task')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    agendaData[selectedDate].splice(index, 1);
+                    if (agendaData[selectedDate].length === 0) {
+                         delete agendaData[selectedDate];
+                    }
+                    saveAgenda();
+                    renderTasks();
+                    renderCalendar();
+                }
+            });
+
+            prevMonthBtn.addEventListener('click', () => {
+                currentMonth--;
+                if (currentMonth < 0) {
+                    currentMonth = 11;
+                    currentYear--;
+                }
+                renderCalendar();
+            });
+
+            nextMonthBtn.addEventListener('click', () => {
+                currentMonth++;
+                if (currentMonth > 11) {
+                    currentMonth = 0;
+                    currentYear++;
+                }
+                renderCalendar();
+            });
+            
+            showPage(homePage);
+        });
+    </script>
+</body>
+</html>
